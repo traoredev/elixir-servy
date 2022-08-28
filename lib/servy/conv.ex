@@ -1,5 +1,9 @@
 defmodule Servy.Conv do
-  defstruct method: "", path: "", response_body: "", status: nil
+  defstruct method: "",
+            path: "",
+            params: %{},
+            response_body: "",
+            status: nil
 
   def full_status(%{status: status}) do
     "#{status} #{status_reason(status)}"
