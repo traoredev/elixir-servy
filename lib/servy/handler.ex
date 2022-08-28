@@ -23,9 +23,9 @@ defmodule Servy.Handler do
   end
 
   # Create a new map that also has the response body
-  # def route(%Conv{method: "GET", path: "/wildthings"} = conv) do
-  #   %{conv | status: 200, response_body: "Bears, Lions, Tigers"}
-  # end
+  def route(%Conv{method: "GET", path: "/wildthings"} = conv) do
+    %{conv | status: 200, response_body: "Bears, Lions, Tigers"}
+  end
 
   def route(%Conv{method: "GET", path: "/bears"} = conv) do
     BearController.index(conv)
@@ -66,80 +66,11 @@ defmodule Servy.Handler do
   # Use values in the map to create an HTTP response string:
   def format_response(%Conv{} = conv) do
     """
-    HTTP/1.1 #{Conv.full_status(conv)}
-    Content-Type: text/html
-    Content-Length: #{String.length(conv.response_body)}
-
+    HTTP/1.1 #{Conv.full_status(conv)}\r
+    Content-Type: text/html\r
+    Content-Length: #{String.length(conv.response_body)}\r
+    \r
     #{conv.response_body}
     """
   end
 end
-
-request = """
-GET /wildlife HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
-
-request = """
-GET /bigfott HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
-
-request = """
-GET /about HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
-
-request = """
-POST /bears HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-Content-type: application/x-www-form-urlencoded
-Content-length: 21
-
-name=Baloo&type=Brown
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
-
-request = """
-GET /bears HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
-
-request = """
-GET /bears/1 HTTP/1.1
-Host: example.com
-User-Agent: ExampleBrowser/1.0
-Accept: */*
-
-"""
-
-response = Servy.Handler.handle(request)
-IO.puts(response)
