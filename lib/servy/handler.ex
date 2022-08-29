@@ -31,6 +31,10 @@ defmodule Servy.Handler do
     BearController.index(conv)
   end
 
+  def route(%Conv{method: "GET", path: "/api/bears"} = conv) do
+    Servy.Api.BearController.index(conv)
+  end
+
   def route(%Conv{method: "GET", path: "/bears/" <> id} = conv) do
     params = Map.put(conv.params, "id", id)
     BearController.show(conv, params)
@@ -64,13 +68,15 @@ defmodule Servy.Handler do
   end
 
   # Use values in the map to create an HTTP response string:
-  def format_response(%Conv{} = conv) do
+  def format_response(
+        %Conv{response_body: response_body, response_headers: response_headers} = conv
+      ) do
     """
     HTTP/1.1 #{Conv.full_status(conv)}\r
-    Content-Type: text/html\r
-    Content-Length: #{String.length(conv.response_body)}\r
+    Content-Type: #{response_headers.content_type}\r
+    Content-Length: #{String.length(response_body)}\r
     \r
-    #{conv.response_body}
+    #{response_body}
     """
   end
 end
